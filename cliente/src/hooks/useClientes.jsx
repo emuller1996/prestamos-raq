@@ -82,6 +82,10 @@ export const useClientes = () => {
       }
     }
   }
+
+  const getAllClientesPaginationPromise = async (data) => {
+    return getAllClientesPaginationService(Token, data)
+  }
   const CreateCliente = async (data) => {
     return postCreateClientesService(Token, data)
   }
@@ -196,6 +200,7 @@ export const useClientes = () => {
     CreateCliente,
     getAllClientesPagination,
     dataP,
-    updateCliente
+    updateCliente,
+    getAllClientesPaginationPromise
   }
 }

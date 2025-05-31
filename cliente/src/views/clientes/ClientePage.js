@@ -70,7 +70,6 @@ const ClientePage = () => {
               striped
               columns={[
                 {
-                  minWidth: '10px',
                   cell: (row) => {
                     return (
                       <>
