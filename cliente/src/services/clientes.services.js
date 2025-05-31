@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 export const postCreateClientesService = (token,data) => {
-  return axios.post('/clientes', data,{ headers: { 'Authorization': token } })
+  return axios.post('/clientes', data,{ headers: { 'access-token': token } })
 }
 
 export const postLoginClientesService = (data) => {
@@ -27,7 +27,7 @@ export const getAllClientesPaginationService = async (token, ...params) => {
 
   return await axios.get(`/clientes/pagination/?${searchs.toString()}`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      'access-token':token,
     },
   });
 };

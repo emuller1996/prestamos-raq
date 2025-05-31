@@ -26,7 +26,7 @@ export const useClientes = () => {
   const [loading, setLoading] = useState(false)
   const abortController = new AbortController()
   const signal = abortController.signal
-  const { Token, TokenClient } = useContext(AuthContext)
+  const { Token } = useContext(AuthContext)
 
   const getAllClientes = async () => {
     setLoading(true)
@@ -94,15 +94,7 @@ export const useClientes = () => {
     return putUpdateClientesService(Token, id, data)
   }
 
-  const putClienteById = async (id, data) => {
-    try {
-      const r = await putUpdateClientesService(TokenClient, id, data)
-      console.log(r.data)
-      setDataDetalle(r.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  
 
   const postClienteNewAddress = async (data) => {
     try {
@@ -188,7 +180,6 @@ export const useClientes = () => {
     loading,
     getAllClientes,
     abortController,
-    putClienteById,
     postClienteNewAddress,
     getAllAddressByClientes,
     dataAddress,

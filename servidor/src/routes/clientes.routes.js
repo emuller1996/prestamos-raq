@@ -50,7 +50,7 @@ ClienteRouters.get("/", validateTokenMid, async (req, res) => {
   }
 });
 
-ClienteRouters.post("/", async (req, res) => {
+ClienteRouters.post("/", validateTokenMid,async (req, res) => {
   try {
     var customer = {};
     const data = req.body;
@@ -185,7 +185,7 @@ ClienteRouters.put(
   }
 );
 
-ClienteRouters.get("/pagination",/* validateTokenClientMid, */ async (req, res) => {
+ClienteRouters.get("/pagination",validateTokenMid, async (req, res) => {
   let perPage = req.query.perPage ?? 10;
   let page = req.query.page ?? 1;
   let search = req.query.search ?? "";
@@ -209,7 +209,7 @@ ClienteRouters.get("/pagination",/* validateTokenClientMid, */ async (req, res) 
           },
         },
         sort: [
-          { "name.keyword": { order: "asc" } }, // Reemplaza con el campo por el que quieres ordenar
+          { "createdTime": { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
         ],
       },
     };

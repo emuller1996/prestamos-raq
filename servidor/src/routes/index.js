@@ -7,6 +7,7 @@ import { validateTokenMid } from "../utils/authjws.js";
 import { INDEX_ES_MAIN_LOGS } from "../config.js";
 import PagosRouters from "./pagos.routes.js";
 import ClienteRouters from "./clientes.routes.js";
+import PrestamosRouters from "./prestamos.routes.js";
 
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
@@ -20,6 +21,8 @@ router.use("/usuarios", validateTokenMid, UsuariosRouters);
 router.use("/auth", AuthRouters);
 router.use("/pagos", PagosRouters);
 router.use("/clientes", ClienteRouters);
+router.use("/prestamos", PrestamosRouters);
+
 
 
 router.get("/test", async (req, res) => {
