@@ -25,9 +25,9 @@ export const StatusOrderOptions = [
 export const stylesSelect = {
   control: (baseStyles, state) => ({
     ...baseStyles,
-    borderColor: state.isFocused ? '#7977e6a2' : '#dbdfe6',
+    borderColor: state.isFocused ? '#0c1605a1' : '#dbdfe6',
     boxShadow: state.isFocused
-      ? '  rgba(0, 0, 0, 0.16) 0px 1px 4px, #4b49b642 0px 0px 0px 3px;'
+      ? '  rgba(0, 0, 0, 0.16) 0px 1px 4px, rgba(29, 97, 1, 0.336) 0px 0px 0px 3px;'
       : '',
     borderRadius: '0.4em',
   }),
@@ -40,9 +40,9 @@ export const stylesSelect = {
 
 export const themeSelect = {
   colors: {
-    primary: '#4b49b688',
-    primary25: '#7473ca',
-    primary50: '#aeade6',
-    primary75: '#dad9f7',
+    primary: '#0c1605a1',
+    primary25: '#a5dbb3',
+    primary50: '#156a2b',
+    primary75: '#a3d6b1',
   },
 }
