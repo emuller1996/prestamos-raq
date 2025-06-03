@@ -16,6 +16,7 @@ PrestamosRouters.get("/", async (req, res) => {
 PrestamosRouters.post("/", async (req, res) => {
   try {
     const data = req.body;
+    data.status ="Pendiente";
     const response = await crearElasticByType(data, "prestamo");
     crearLogsElastic(req.headers, req.body, "SE CREO UN PRESTAMO");
     return res.status(201).json({ message: "Usuario Creado.", data, response });
