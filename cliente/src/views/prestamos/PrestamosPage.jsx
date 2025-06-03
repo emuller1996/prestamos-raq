@@ -60,8 +60,9 @@ export default function PrestamosPage() {
                   minWidth: '200px',
                 },
                 { name: 'interest rate', selector: (row) => row?.interest_rate ?? '' },
-                { name: 'amount capital', selector: (row) => row?.amount_capital ?? '' },
-                { name: 'amount_interes capital', selector: (row) => row?.amount_interes ?? '' },
+                { name: 'amount capital', selector: (row) => row?.amount_capital ? ViewDollar(row?.amount) : '' },
+                { name: 'amount_interes capital', selector: (row) =>  row?.amount_interes ? ViewDollar(row?.amount) : '' },
+                { name: 'Estado', selector: (row) => row?.status ?? '' },
                 {
                   name: 'Fecha Creacion.',
                   selector: (row) =>

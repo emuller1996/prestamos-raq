@@ -96,7 +96,7 @@ const Login = () => {
                     </div>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" type="submit" className="px-4">
+                        <CButton color="success" type="submit" className="px-4">
                           {/* <Link to={'/d/dashboard'}> */}
                           Login
                           {/* </Link> */}
