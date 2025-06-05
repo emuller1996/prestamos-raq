@@ -50,12 +50,12 @@ ClienteRouters.get("/", validateTokenMid, async (req, res) => {
   }
 });
 
-ClienteRouters.post("/", validateTokenMid,async (req, res) => {
+ClienteRouters.post("/", validateTokenMid, async (req, res) => {
   try {
     var customer = {};
     const data = req.body;
     //validacion usuario.
-    
+
     data.createdTime = new Date().getTime();
     const response = await crearElasticByType(data, "cliente");
     customer = response.body;
@@ -185,7 +185,7 @@ ClienteRouters.put(
   }
 );
 
-ClienteRouters.get("/pagination",validateTokenMid, async (req, res) => {
+ClienteRouters.get("/pagination", validateTokenMid, async (req, res) => {
   let perPage = req.query.perPage ?? 10;
   let page = req.query.page ?? 1;
   let search = req.query.search ?? "";
@@ -209,13 +209,16 @@ ClienteRouters.get("/pagination",validateTokenMid, async (req, res) => {
           },
         },
         sort: [
-          { "createdTime": { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
+          { createdTime: { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
         ],
       },
     };
     if (search !== "" && search) {
       consulta.body.query.bool.must.push({
-        query_string: { query: `*${search}*`, fields: ["name", "telefono","alias"] },
+        query_string: {
+          query: `*${search}*`,
+          fields: ["name", "telefono", "alias"],
+        },
       });
     }
     const searchResult = await client.search(consulta);
@@ -235,13 +238,68 @@ ClienteRouters.get("/pagination",validateTokenMid, async (req, res) => {
       data: data,
       total: searchResult.body.hits.total.value,
       total_pages: Math.ceil(searchResult.body.hits.total.value / perPage),
-      consulta
+      consulta,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 });
 
+ClienteRouters.post("/:id/comments", validateTokenMid, async (req, res) => {
+  const dataComentarioCliente = req.body;
+  const resElasCreate = await crearElasticByType(
+    dataComentarioCliente,
+    "comentario"
+  );
+  return res.status(200).json({
+    message: "Se creo el comentario correctamente. ",
+    resElasCreate,
+  });
+});
 
+ClienteRouters.get("/:id/comments", async (req, res) => {
+  try {
+    const searchResult = await client.search({
+      index: INDEX_ES_MAIN,
+      size: 1000,
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  "type.keyword": {
+                    value: "comentario",
+                  },
+                },
+              },
+              {
+                term: {
+                  "clien_id.keyword": {
+                    value: req.params.id,
+                  },
+                },
+              },
+            ],
+          },
+        },
+        sort: [
+          { createdTime: { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
+        ],
+      },
+    });
+
+    const dataFuncion = searchResult.body.hits.hits.map((c) => {
+      return {
+        ...c._source,
+        _id: c._id,
+      };
+    });
+
+    return res.status(200).json(dataFuncion);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
 
 export default ClienteRouters;

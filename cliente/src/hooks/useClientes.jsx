@@ -4,10 +4,12 @@ import { useContext, useState } from 'react'
 import {
   getAllClientesPaginationService,
   getAllClientesService,
+  getComentarioClientesService,
   getGetAddressClientesService,
   getGetShoppingClientesService,
   getShopByIdService,
   postCreateClientesService,
+  postCreateComentarioClientesService,
   postNewAddressClientesService,
   putNewAddressClientesService,
   putUpdateClientesService,
@@ -92,6 +94,14 @@ export const useClientes = () => {
 
   const updateCliente = async (data, id) => {
     return putUpdateClientesService(Token, id, data)
+  }
+
+   const createComentarioByCliente = async (data, id) => {
+    return postCreateComentarioClientesService(Token, id, data)
+  }
+
+   const getAllComentarioByClientesPaginationPromise = async (client_id) => {
+    return getComentarioClientesService(Token, client_id)
   }
 
   
@@ -192,6 +202,8 @@ export const useClientes = () => {
     getAllClientesPagination,
     dataP,
     updateCliente,
-    getAllClientesPaginationPromise
+    getAllClientesPaginationPromise,
+    createComentarioByCliente,
+    getAllComentarioByClientesPaginationPromise
   }
 }

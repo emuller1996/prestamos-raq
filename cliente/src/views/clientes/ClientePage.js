@@ -5,9 +5,12 @@ import { useClientes } from '../../hooks/useClientes'
 import DataTable from 'react-data-table-component'
 import { paginationComponentOptions } from '../../utils/optionsConfig'
 import FormClientes from './components/FormClientes'
+import ComentariosCliente from './components/ComentariosCliente/ComentariosCliente'
 
 const ClientePage = () => {
   const [show, setShow] = useState(false)
+  const [show2, setShow2] = useState(false)
+
   const [Draw, setDraw] = useState(1)
   const [ClienteS, setClienteS] = useState(null)
 
@@ -83,8 +86,15 @@ const ClientePage = () => {
                         >
                           <i className="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <button type="button" className="btn btn-dark btn-sm ms-2">
-                          <i className="fa-solid fa-eye"></i>
+                        <button
+                          onClick={() => {
+                            setClienteS(row)
+                            setShow2(true)
+                          }}
+                          type="button"
+                          className="btn btn-dark btn-sm ms-2"
+                        >
+                          <i className="fa-solid fa-comments"></i>
                         </button>
                       </>
                     )
@@ -147,6 +157,22 @@ const ClientePage = () => {
               }}
             />
           </Modal.Body>
+        </Modal>
+        <Modal size="lg" centered show={show2} onHide={() => setShow2(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Comentarios de Cliente : {`${ClienteS?.name}`}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <ComentariosCliente Cliente={ClienteS} />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShow2(false)}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={() => setShow2(false)}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
         </Modal>
       </CContainer>
     </div>
