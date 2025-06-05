@@ -36,6 +36,14 @@ export const putUpdateClientesService = (token, id, data) => {
   return axios.put(`/clientes/${id}`, data, { headers: { 'access-token': token } })
 }
 
+export const  postCreateComentarioClientesService = (token, id, data) => {
+  return axios.post(`/clientes/${id}/comments`, data, { headers: { 'access-token': token } })
+}
+
+export const  getComentarioClientesService = (token, id) => {
+  return axios.get(`/clientes/${id}/comments`,  { headers: { 'access-token': token } })
+}
+
 export const postNewAddressClientesService = (token, data) => {
   return axios.post(`/clientes/new/address`, data, { headers: { 'Authorization': token } })
 }
