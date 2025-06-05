@@ -257,7 +257,7 @@ ClienteRouters.post("/:id/comments", validateTokenMid, async (req, res) => {
   });
 });
 
-ClienteRouters.get("/:id/comments", async (req, res) => {
+ClienteRouters.get("/:id/comments", validateTokenMid, async (req, res) => {
   try {
     const searchResult = await client.search({
       index: INDEX_ES_MAIN,
