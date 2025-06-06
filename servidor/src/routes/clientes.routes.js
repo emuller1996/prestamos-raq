@@ -295,7 +295,6 @@ ClienteRouters.get("/:id/comments", validateTokenMid, async (req, res) => {
         _id: c._id,
       };
     });
-
     return res.status(200).json(dataFuncion);
   } catch (error) {
     return res.status(500).json({ message: error.message });
