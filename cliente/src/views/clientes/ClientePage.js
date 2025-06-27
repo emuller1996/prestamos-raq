@@ -128,11 +128,13 @@ const ClientePage = () => {
                 },
                 { name: '', selector: (row) => row?.city ?? '' },
               ]}
+              paginationServer
               data={dataP.data ?? []}
               pagination
               paginationComponentOptions={paginationComponentOptions}
               paginationPerPage={dataFilter.perPage}
               noDataComponent="No hay datos para mostrar"
+              paginationTotalRows={dataP?.total}
               onChangeRowsPerPage={(perPage, page) => {
                 console.log(perPage, page)
                 setdataFilter((status) => {
