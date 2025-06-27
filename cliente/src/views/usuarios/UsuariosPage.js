@@ -27,15 +27,14 @@ const UsuariosPage = () => {
           Crear Usuarios
         </Button>
       </div>
-      <p>UsuariosPage </p>
       <div className="rounded overflow-hidden border border-ligth shadow-sm mt-3">
         <DataTable
           className="MyDataTableEvent"
           striped
           columns={[
             { name: 'Id', selector: (row) => row._id, width: '100px' },
-            { name: 'Nombre', selector: (row) => row?.name ?? '', width: '200px' },
-            { name: 'Correo', selector: (row) => row?.email ?? '', width: '200px' },
+            { name: 'Nombre', selector: (row) => row?.name ?? '', width: '250px' },
+            { name: 'Correo', selector: (row) => row?.email ?? '', width: '250px' },
             { name: 'Rol', selector: (row) => row?.role ?? '', width: '150px' },
             { name: '', selector: (row) => row?.city ?? '' },
           ]}

@@ -79,6 +79,7 @@ export default function PrestamosPage() {
               ]}
               data={data ?? []}
               pagination
+              paginationTotalRows={data?.length}
               paginationComponentOptions={paginationComponentOptions}
               noDataComponent="No hay datos para mostrar"
             />
