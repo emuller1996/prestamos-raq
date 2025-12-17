@@ -11,8 +11,8 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/usuarios', name: 'Usuarios', element: UsuariosPage },
   { path: '/clientes', name: 'Clientes', element: ClientePage },
-  { path: '/prestamos', name: 'Clientes', element: PrestamosPage },
-  { path: '/prestamos/crear', name: 'Clientes', element: PrestamosCrearPage },
+  { path: '/prestamos', name: 'Prestamos', element: PrestamosPage },
+  { path: '/prestamos/crear', name: 'Crear', element: PrestamosCrearPage },
 ]
 
 export default routes
