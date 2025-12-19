@@ -3,6 +3,7 @@ import {
   buscarElasticByType,
   crearElasticByType,
   crearLogsElastic,
+  getDocumentById,
 } from "../utils/index.js";
 import { client } from "../db.js";
 import { INDEX_ES_MAIN } from "../config.js";
@@ -12,6 +13,22 @@ const PrestamosRouters = Router();
 PrestamosRouters.get("/", async (req, res) => {
   try {
     var data = await buscarElasticByType("prestamo");
+    /* return res.json(searchResult.body.hits); */
+    return res.status(200).json(data);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+PrestamosRouters.get("/:id", async (req, res) => {
+  try {
+    var data = await getDocumentById(req.params.id);
+    if (data.type !== "prestamo") {
+      throw new Error("Error al Obtener Prestamo");
+    }
+    if (data.client.value) {
+      data.clientData = await getDocumentById(data.client.value);
+    }
     /* return res.json(searchResult.body.hits); */
     return res.status(200).json(data);
   } catch (error) {
@@ -30,7 +47,7 @@ PrestamosRouters.get("/getcount", async (req, res) => {
       },
     },
   });
-  var count = result.body.count
+  var count = result.body.count;
   return res.status(200).json(++count);
 });
 
