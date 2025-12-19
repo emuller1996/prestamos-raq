@@ -20,6 +20,21 @@ PrestamosRouters.get("/", async (req, res) => {
   }
 });
 
+PrestamosRouters.get("/getcount", async (req, res) => {
+  const result = await client.count({
+    index: INDEX_ES_MAIN,
+    body: {
+      query: {
+        term: {
+          type: "prestamo", // Consulta keyword para el atributo type igual a "clientes"
+        },
+      },
+    },
+  });
+  var count = result.body.count;
+  return res.status(200).json(++count);
+});
+
 PrestamosRouters.get("/:id", async (req, res) => {
   try {
     var data = await getDocumentById(req.params.id);
@@ -36,20 +51,7 @@ PrestamosRouters.get("/:id", async (req, res) => {
   }
 });
 
-PrestamosRouters.get("/getcount", async (req, res) => {
-  const result = await client.count({
-    index: INDEX_ES_MAIN,
-    body: {
-      query: {
-        term: {
-          type: "prestamo", // Consulta keyword para el atributo type igual a "clientes"
-        },
-      },
-    },
-  });
-  var count = result.body.count;
-  return res.status(200).json(++count);
-});
+
 
 PrestamosRouters.post("/", async (req, res) => {
   try {
