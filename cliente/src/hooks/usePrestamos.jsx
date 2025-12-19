@@ -2,7 +2,11 @@
 
 import { useContext, useState } from 'react'
 import AuthContext from '../context/AuthContext'
-import { getAllPrestamoService, postCreatePrestamoService } from '../services/prestamos.services'
+import {
+  getAllPrestamoService,
+  getCountPrestamoService,
+  postCreatePrestamoService,
+} from '../services/prestamos.services'
 
 export const usePrestamos = () => {
   const [data, setData] = useState(null)
@@ -11,10 +15,20 @@ export const usePrestamos = () => {
   const [loading, setLoading] = useState(false)
   const abortController = new AbortController()
   const signal = abortController.signal
+  const [Count, setCount] = useState(null)
   const { Token, TokenClient } = useContext(AuthContext)
 
   const CreatePrestamo = async (data) => {
     return postCreatePrestamoService(Token, data)
+  }
+
+  const getCountPrestamos = async (data) => {
+    try {
+      const result = await getCountPrestamoService(Token, data)
+      setCount(result.data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const getAlPrestamo = async () => {
@@ -44,5 +58,5 @@ export const usePrestamos = () => {
     }
   }
 
-  return { CreatePrestamo, data, loading, error, getAlPrestamo }
+  return { CreatePrestamo, data, loading, error, getAlPrestamo, getCountPrestamos, Count }
 }

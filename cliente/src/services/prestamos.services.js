@@ -8,3 +8,7 @@ export const postCreatePrestamoService = (token, data) => {
 export const getAllPrestamoService = (token, signal) => {
   return axios.get('/prestamos', { headers: { 'access-token': token }, signal: signal })
 }
+
+export const getCountPrestamoService = (token, signal) => {
+  return axios.get('/prestamos/getcount', { headers: { 'access-token': token }, signal: signal })
+}

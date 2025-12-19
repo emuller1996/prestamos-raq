@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Card, Form, InputGroup } from 'react-bootstrap'
 import AsyncSelect from 'react-select/async'
 import { useClientes } from '../../hooks/useClientes'
@@ -13,7 +13,7 @@ import toast from 'react-hot-toast'
 export default function PrestamosCrearPage() {
   const { getAllClientesPaginationPromise } = useClientes()
 
-  const { CreatePrestamo } = usePrestamos()
+  const { CreatePrestamo, getCountPrestamos, Count } = usePrestamos()
 
   const {
     register,
@@ -24,9 +24,14 @@ export default function PrestamosCrearPage() {
     formState: { errors },
   } = useForm()
 
+  useEffect(() => {
+    getCountPrestamos()
+  }, [])
+
   const onSubmit = async (data) => {
     data.amount_capital = data.amount + data.amount * (data.interest_rate / 100)
     data.amount_interes = data.amount * (data.interest_rate / 100)
+    data.code =`PTM-${Count}` 
 
     console.log(data)
     try {
@@ -62,11 +67,14 @@ export default function PrestamosCrearPage() {
           <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
             <p className="text-center pb-0">Crear Nuevo Prestamo</p>
             <hr />
+            <div style={{ textAlign: 'center' }}>
+              <span style={{ fontWeight: '700' }}>PTM-{Count}</span>
+            </div>
             <div className="mb-3">
               <Form.Label htmlFor="cliente">Monto de Prestamo</Form.Label>
               <Controller
                 name="client"
-                rules={{ required: true }}
+                rules={{ required: { value: true, message: 'El cliente es requeridad' } }}
                 control={control}
                 render={({ field: { name, onChange, ref } }) => {
                   return (
@@ -87,13 +95,14 @@ export default function PrestamosCrearPage() {
                   )
                 }}
               />
+              {errors.client && <span className='ms-2 text-danger '>{errors.client.message}</span>}
             </div>
             <div className="row g-3">
               <div className="col-md-6">
-                <Form.Label htmlFor="amount">Monto de Prestamo</Form.Label>
+                <Form.Label htmlFor="amount">Monto de Préstamo</Form.Label>
                 <Controller
                   name="amount"
-                  rules={{ required: true }}
+                  rules={{ required: { value:true, message:"Monto del préstamo es requerida"} }}
                   control={control}
                   render={({ field: { name, onChange, ref } }) => {
                     return (
@@ -113,14 +122,16 @@ export default function PrestamosCrearPage() {
                     )
                   }}
                 />
+                {errors.amount && <span className='ms-2 text-danger '>{errors.amount.message}</span>}
               </div>
               <div className="col-md-2">
                 <Form.Label htmlFor="interest_rate">Interes</Form.Label>
                 <Controller
                   name="interest_rate"
-                  rules={{ required: true }}
+                  rules={{ required: {value :true , message:"El Interes del préstamo es requerida"} }}
                   control={control}
-                  render={({ field: { name, onChange, ref } }) => {
+                  defaultValue={20}
+                  render={({ field: { name, onChange,value, ref } }) => {
                     return (
                       <CurrencyInput
                         className="form-control"
@@ -129,6 +140,7 @@ export default function PrestamosCrearPage() {
                         placeholder=""
                         decimalsLimit={2}
                         prefix="%"
+                        defaultValue={value}
                         onValueChange={(value, name) => {
                           console.log(value)
                           onChange(parseFloat(value ?? 0))
@@ -137,26 +149,19 @@ export default function PrestamosCrearPage() {
                     )
                   }}
                 />
+                {errors.interest_rate && <span className='ms-2 text-danger '>{errors.interest_rate.message}</span>}
               </div>
-              {/* <div className="col-md-2">
-                <Form.Label htmlFor="interest_rate">Interes (%)</Form.Label>
-                <Form.Control
-                  {...register('interest_rate', { required: true })}
-                  id="interest_rate"
-                  type="number"
-                  placeholder=""
-                />
-              </div> */}
               <div className="col-md-4">
                 <Form.Label htmlFor="num_day_payment">Numero del Dia de Pago</Form.Label>
                 <Form.Control
                   id="num_day_payment"
-                  {...register('num_day_payment', { required: true })}
+                  {...register('num_day_payment', { required: { value: true, message:"El dia de pago es requeridad"} })}
                   type="number"
                   placeholder=""
                   max={31}
                   min={1}
                 />
+                {errors.num_day_payment && <span className='ms-2 text-danger '>{errors.num_day_payment.message}</span>}
               </div>
               <div className="col-md-6">
                 <Form.Label htmlFor="date_delivery">Fecha de Entrega</Form.Label>
@@ -164,8 +169,9 @@ export default function PrestamosCrearPage() {
                   id="date_delivery"
                   type="date"
                   placeholder=""
-                  {...register('date_delivery', { required: true })}
+                  {...register('date_delivery', { required: {value:true, message:"Fecha de entrega del dinero es requerida"} })}
                 />
+                {errors.date_delivery && <span className='ms-2 text-danger '>{errors.date_delivery.message}</span>}
               </div>
             </div>
             <div className="col-6 mt-5">
