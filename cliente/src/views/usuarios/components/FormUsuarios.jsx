@@ -4,8 +4,6 @@ import { Button, Form } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { postCreatePuntoVentaService } from '../../../services/punto_venta.services'
-import { postCreateUsuariosService } from '../../../services/usuarios.services'
 import PropTypes from 'prop-types'
 import { useUsuarios } from '../../../hooks/useUsuarios'
 

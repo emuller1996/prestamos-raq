@@ -21,7 +21,7 @@ const UsuariosPage = () => {
     }
   }, [Draw])
   return (
-    <div>
+    <div className="container">
       <div>
         <Button variant="primary" onClick={handleShow}>
           Crear Usuarios
