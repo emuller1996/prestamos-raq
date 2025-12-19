@@ -5,6 +5,7 @@ const UsuariosPage = React.lazy(() => import('./views/usuarios/UsuariosPage'))
 const ClientePage = React.lazy(() => import('./views/clientes/ClientePage'))
 const PrestamosPage = React.lazy(() => import('./views/prestamos/PrestamosPage'))
 const PrestamosCrearPage = React.lazy(() => import('./views/prestamo-crear/PrestamosCrearPage'))
+const PrestamoDetalle = React.lazy(() => import('./views/prestamos-detalle/PrestamosDetalle'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -13,6 +14,7 @@ const routes = [
   { path: '/clientes', name: 'Clientes', element: ClientePage },
   { path: '/prestamos', name: 'Prestamos', element: PrestamosPage },
   { path: '/prestamos/crear', name: 'Crear', element: PrestamosCrearPage },
+  { path: '/prestamos/detalle/:id', name: 'Detalle', element: PrestamoDetalle },
 ]
 
 export default routes

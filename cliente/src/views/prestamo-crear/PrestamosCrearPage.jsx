@@ -71,7 +71,7 @@ export default function PrestamosCrearPage() {
               <span style={{ fontWeight: '700' }}>PTM-{Count}</span>
             </div>
             <div className="mb-3">
-              <Form.Label htmlFor="cliente">Monto de Prestamo</Form.Label>
+              <Form.Label htmlFor="cliente">Monto de Préstamo</Form.Label>
               <Controller
                 name="client"
                 rules={{ required: { value: true, message: 'El cliente es requeridad' } }}
@@ -125,7 +125,7 @@ export default function PrestamosCrearPage() {
                 {errors.amount && <span className='ms-2 text-danger '>{errors.amount.message}</span>}
               </div>
               <div className="col-md-2">
-                <Form.Label htmlFor="interest_rate">Interes</Form.Label>
+                <Form.Label htmlFor="interest_rate">Interés</Form.Label>
                 <Controller
                   name="interest_rate"
                   rules={{ required: {value :true , message:"El Interes del préstamo es requerida"} }}

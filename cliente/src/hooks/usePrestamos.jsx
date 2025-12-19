@@ -5,11 +5,13 @@ import AuthContext from '../context/AuthContext'
 import {
   getAllPrestamoService,
   getCountPrestamoService,
+  getPrestamoByIdService,
   postCreatePrestamoService,
 } from '../services/prestamos.services'
 
 export const usePrestamos = () => {
   const [data, setData] = useState(null)
+  const [dataDetalle, setDataDetalle] = useState(null)
 
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -20,6 +22,15 @@ export const usePrestamos = () => {
 
   const CreatePrestamo = async (data) => {
     return postCreatePrestamoService(Token, data)
+  }
+
+  const getPrestamoById = async (id) => {
+    try {
+      const result = await getPrestamoByIdService(Token, signal, id)
+      setDataDetalle(result.data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const getCountPrestamos = async (data) => {
@@ -58,5 +69,15 @@ export const usePrestamos = () => {
     }
   }
 
-  return { CreatePrestamo, data, loading, error, getAlPrestamo, getCountPrestamos, Count }
+  return {
+    loading,
+    error,
+    CreatePrestamo,
+    getAlPrestamo,
+    getPrestamoById,
+    getCountPrestamos,
+    Count,
+    dataDetalle,
+    data,
+  }
 }
