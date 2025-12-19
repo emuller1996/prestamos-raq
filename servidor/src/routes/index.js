@@ -20,8 +20,8 @@ const router = Router();
 router.use("/usuarios", validateTokenMid, UsuariosRouters);
 router.use("/auth", AuthRouters);
 router.use("/pagos", PagosRouters);
-router.use("/clientes", ClienteRouters);
-router.use("/prestamos", PrestamosRouters);
+router.use("/clientes",validateTokenMid, ClienteRouters);
+router.use("/prestamos",validateTokenMid, PrestamosRouters);
 
 
 
