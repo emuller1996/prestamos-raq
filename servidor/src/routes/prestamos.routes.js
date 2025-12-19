@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { buscarElasticByType, crearElasticByType, crearLogsElastic } from "../utils/index.js";
+import {
+  buscarElasticByType,
+  crearElasticByType,
+  crearLogsElastic,
+} from "../utils/index.js";
+import { client } from "../db.js";
+import { INDEX_ES_MAIN } from "../config.js";
 
 const PrestamosRouters = Router();
 
@@ -13,10 +19,25 @@ PrestamosRouters.get("/", async (req, res) => {
   }
 });
 
+PrestamosRouters.get("/getcount", async (req, res) => {
+  const result = await client.count({
+    index: INDEX_ES_MAIN,
+    body: {
+      query: {
+        term: {
+          type: "prestamo", // Consulta keyword para el atributo type igual a "clientes"
+        },
+      },
+    },
+  });
+  var count = result.body.count
+  return res.status(200).json(++count);
+});
+
 PrestamosRouters.post("/", async (req, res) => {
   try {
     const data = req.body;
-    data.status ="Pendiente";
+    data.status = "Pendiente";
     const response = await crearElasticByType(data, "prestamo");
     crearLogsElastic(req.headers, req.body, "SE CREO UN PRESTAMO");
     return res.status(201).json({ message: "Usuario Creado.", data, response });

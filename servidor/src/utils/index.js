@@ -166,10 +166,10 @@ export async function crearElasticByType(data, type) {
   return response;
 }
 
-export async function crearLogsElastic(header, body, description) {
+export async function crearLogsElastic(header, dataLog, description) {
   var createType = {};
-  createType.header = header;
-  createType.body = body;
+  createType.header = JSON.stringify(header);
+  createType.dataLog = JSON.stringify(dataLog);
   createType.description = description;
   createType.type = "log";
   createType.createdTime = new Date().getTime();
