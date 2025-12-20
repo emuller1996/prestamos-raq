@@ -61,7 +61,7 @@ export default function PrestamosCrearPage() {
     }
   }
   return (
-    <>
+    <div className='container'>
       <Card>
         <Card.Body>
           <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
@@ -200,6 +200,6 @@ export default function PrestamosCrearPage() {
           </form>
         </Card.Body>
       </Card>
-    </>
+    </div>
   )
 }
