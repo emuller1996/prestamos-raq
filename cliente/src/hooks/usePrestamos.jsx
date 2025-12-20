@@ -26,10 +26,13 @@ export const usePrestamos = () => {
 
   const getPrestamoById = async (id) => {
     try {
+      setLoading(true)
       const result = await getPrestamoByIdService(Token, signal, id)
       setDataDetalle(result.data)
     } catch (error) {
       console.log(error)
+    }finally{
+      setLoading(false)
     }
   }
 
