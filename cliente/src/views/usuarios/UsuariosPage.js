@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Modal } from 'react-bootstrap'
+import { Button, ButtonGroup, Modal } from 'react-bootstrap'
 import FormUsuarios from './components/FormUsuarios'
 import { useUsuarios } from '../../hooks/useUsuarios'
 import DataTable from 'react-data-table-component'
 import { paginationComponentOptions } from '../../utils/optionsConfig'
+import FormChangePassword from './components/FormChangePassword'
 
 const UsuariosPage = () => {
   const [show, setShow] = useState(false)
   const [Draw, setDraw] = useState(1)
+  const [showPass, setShowPass] = useState({ show: false, data: null })
 
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
@@ -23,7 +25,7 @@ const UsuariosPage = () => {
   return (
     <div className="container">
       <div>
-        <Button variant="primary" onClick={handleShow}>
+        <Button variant="success" className="text-white" onClick={handleShow}>
           Crear Usuarios
         </Button>
       </div>
@@ -32,12 +34,32 @@ const UsuariosPage = () => {
           className="MyDataTableEvent"
           striped
           columns={[
+            {
+              name: 'Id',
+              cell: (row) => {
+                return (
+                  <ButtonGroup size="sm">
+                    <Button
+                      onClick={() => {
+                        setShowPass({ show: true, data: row })
+                      }}
+                      title="Cambiar Contraseña"
+                      variant="info"
+                    >
+                      <i className="fa-solid fa-key text-white"></i>
+                    </Button>
+                  </ButtonGroup>
+                )
+              },
+              width: '100px',
+            },
             { name: 'Id', selector: (row) => row._id, width: '100px' },
             { name: 'Nombre', selector: (row) => row?.name ?? '', width: '250px' },
             { name: 'Correo', selector: (row) => row?.email ?? '', width: '250px' },
             { name: 'Rol', selector: (row) => row?.role ?? '', width: '150px' },
             { name: '', selector: (row) => row?.city ?? '' },
           ]}
+          progressPending={loading}
           data={ListUsuaios ?? []}
           pagination
           paginationComponentOptions={paginationComponentOptions}
@@ -51,6 +73,27 @@ const UsuariosPage = () => {
             onHide={handleClose}
             allUser={() => {
               setDraw((status) => ++status)
+            }}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal
+        size="sm"
+        centered
+        show={showPass.show}
+        onHide={() => {
+          setShowPass({ show: false, data: null })
+        }}
+      >
+        <Modal.Header closeButton style={{ backgroundColor: '#11640079' }}>
+          Cambiar Contraseña
+        </Modal.Header>
+        <Modal.Body>
+          <FormChangePassword
+            dataUser={showPass.data}
+            allUser={() => {
+              setDraw((status) => ++status)
+              setShowPass({ show: false, data: null })
             }}
           />
         </Modal.Body>

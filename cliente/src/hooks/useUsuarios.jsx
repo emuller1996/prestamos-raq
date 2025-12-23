@@ -1,7 +1,11 @@
 /* eslint-disable prettier/prettier */
 
 import { useContext, useState } from 'react'
-import { getAllUsuariosService, postCreateUsuariosService } from '../services/usuarios.services'
+import {
+  getAllUsuariosService,
+  patchChangePasswordUsuariosService,
+  postCreateUsuariosService,
+} from '../services/usuarios.services'
 import AuthContext from '../context/AuthContext'
 
 export const useUsuarios = () => {
@@ -42,8 +46,12 @@ export const useUsuarios = () => {
     }
   }
 
-  const postCreateUsuarios = (data) =>{
+  const postCreateUsuarios = (data) => {
     return postCreateUsuariosService(Token, data)
+  }
+
+  const patchChangePasswordUsuarios = (data, id) => {
+    return patchChangePasswordUsuariosService(Token, data, id)
   }
   /* const getEventoById = async (id) => {
     try {
@@ -61,6 +69,7 @@ export const useUsuarios = () => {
     loading,
     getAlUsuarios,
     abortController,
-    postCreateUsuarios
+    postCreateUsuarios,
+    patchChangePasswordUsuarios
   }
 }

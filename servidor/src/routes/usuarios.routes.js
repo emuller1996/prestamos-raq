@@ -4,9 +4,12 @@ import {
   crearElasticByType,
   crearLogsElastic,
   getDocumentById,
+  updateElasticByType,
 } from "../utils/index.js";
 
 import md5 from "md5";
+import { client } from "../db.js";
+import { INDEX_ES_MAIN } from "../config.js";
 
 const UsuariosRouters = Router();
 
@@ -38,8 +41,22 @@ UsuariosRouters.post("/", async (req, res) => {
     data.password = md5(data.password);
     const response = await crearElasticByType(data, "usuario");
     //recinto = response.body;
-    crearLogsElastic(req.headers,req.body,"SE CREO UN USUARIO")
+    crearLogsElastic(req.headers, req.body, "SE CREO UN USUARIO");
     return res.status(201).json({ message: "Usuario Creado.", recinto, data });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+UsuariosRouters.patch("/:id/change_password", async (req, res) => {
+  try {
+    const data = req.body;
+    let password = md5(data.password);
+    const r = await updateElasticByType(req.params.id, { password: password });
+    if (r.body.result === "updated") {
+      await client.indices.refresh({ index: INDEX_ES_MAIN });
+      return res.json({ message: "Actualizado" });
+    }
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
