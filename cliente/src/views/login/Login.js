@@ -12,6 +12,7 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CSpinner,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
@@ -24,6 +25,7 @@ import { jwtDecode } from 'jwt-decode'
 const Login = () => {
   const [, setTokenAccess] = useLocalStorage('tokenAccessRAQ', null)
   const { setToken, setUser } = useContext(AuthContext)
+  const [isLoading, setisLoading] = useState(false)
 
   const navigate = useNavigate()
 
@@ -39,18 +41,21 @@ const Login = () => {
   const onSubmit = async (data) => {
     console.log(data)
     try {
+      setisLoading(true)
       seterrorMessage(null)
       const r = await postLoginService(data)
       console.log(r.data)
       setTokenAccess(r.data.token)
       setToken(r.data.token)
       setUser(jwtDecode(r.data.token))
-      navigate('/d/dashboard')
+      navigate('/dashboard')
     } catch (error) {
       console.log(error)
       if (error.response.status === 400) {
         seterrorMessage(error.response.data.message)
       }
+    } finally {
+      setisLoading(false)
     }
   }
   return (
@@ -94,21 +99,32 @@ const Login = () => {
                         </div>
                       )}
                     </div>
-                    <CRow>
-                      <CCol xs={6}>
-                        <CButton color="success" type="submit" className="px-4">
-                          {/* <Link to={'/d/dashboard'}> */}
-                          Login
-                          {/* </Link> */}
-                        </CButton>
-                      </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
-                        </CButton>
-                      </CCol>
-                      <Link to={'/'}>Home</Link>
-                    </CRow>
+                    <div className="text-center">
+                      <CButton
+                        disabled={isLoading}
+                        color="success"
+                        type="submit"
+                        className="px-4 text-white"
+                      >
+                        {isLoading ? (
+                          <CSpinner
+                            style={{
+                              width: '15px',
+                              height: '15px',
+                              marginLeft: '0.7em',
+                              marginRight: '0.7em',
+                            }}
+                          ></CSpinner>
+                        ) : (
+                          'Login'
+                        )}
+                      </CButton>
+                    </div>
+                    <div className="text-end">
+                      <CButton color="link" className="text-success px-0">
+                        ¿Se te olvido la contraseña?
+                      </CButton>
+                    </div>
                   </CForm>
                 </CCardBody>
               </CCard>

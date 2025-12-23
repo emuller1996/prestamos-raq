@@ -89,7 +89,7 @@ export default function PrestamosPage() {
               progressComponent={
                 <>
                   <div className="my-5">
-                    <Spinner animation="border" role="status">
+                    <Spinner color='success' animation="border" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </Spinner>
                   </div>

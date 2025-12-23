@@ -152,7 +152,7 @@ const ClientePage = () => {
             progressComponent={
               <div className="d-flex justify-content-center my-5">
                 <div
-                  className="spinner-border text-primary"
+                  className="spinner-border text-success"
                   style={{ width: '3em', height: '3em' }}
                   role="status"
                 >

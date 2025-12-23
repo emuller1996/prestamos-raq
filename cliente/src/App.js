@@ -46,7 +46,7 @@ const App = () => {
         <Suspense
           fallback={
             <div className="pt-3 text-center">
-              <CSpinner color="primary" variant="grow" />
+              <CSpinner color="success" variant="grow" />
             </div>
           }
         >
