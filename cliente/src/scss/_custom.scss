@@ -33,3 +33,16 @@
     rgba(11, 24, 1, 0.16) 0px 1px 4px,
     rgba(29, 97, 1, 0.336) 0px 0px 0px 3px !important;
 }
+
+
+.nav-link{
+  color: #108a00;
+}
+.nav-link :hover, .nav-item{
+  color: #1adb00;
+}
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+  color: #0a5500;
+  font-weight: 700;
+
+}
