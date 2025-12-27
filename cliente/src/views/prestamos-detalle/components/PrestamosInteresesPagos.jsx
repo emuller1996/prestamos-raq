@@ -1,22 +1,21 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Button, Card, Form, Modal } from 'react-bootstrap'
 import { ViewDollar } from '../../../utils'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import CurrencyInput from 'react-currency-input-field'
 import PropTypes from 'prop-types'
-import { usePrestamos } from '../../../hooks/usePrestamos'
-import toast from 'react-hot-toast'
-export default function PrestamosAbonosPagos({ idPrestamo }) {
-  PrestamosAbonosPagos.propTypes = {
+
+export default function PrestamosInteresesPagos({ idPrestamo }) {
+  PrestamosInteresesPagos.propTypes = {
     idPrestamo: PropTypes.string,
   }
+
   const [show, setShow] = useState(false)
+
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
-
-  const { CreatePagoAbonoPrestamo, getPagoAbonosPrestamoById, PagoAbonos } = usePrestamos()
 
   const {
     register,
@@ -27,49 +26,51 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
     formState: { errors },
   } = useForm()
 
-  useEffect(() => {
-    getPagoAbonosPrestamoById(idPrestamo)
-  }, [])
-
   const onSubmit = async (data) => {
-    try {
-      const result = await CreatePagoAbonoPrestamo(data, idPrestamo)
-      toast.success(result.data.message || 'Registro creado')
-      handleClose()
-      getPagoAbonosPrestamoById(idPrestamo)
-    } catch (error) {
-      console.log(error)
-    }
+    console.log(data)
   }
+
+  const months = [
+    { value: 'Enero', label: 'Enero' },
+    { value: 'Febrero', label: 'Febrero' },
+    { value: 'Marzo', label: 'Marzo' },
+    { value: 'Abril', label: 'Abril' },
+    { value: 'Mayo', label: 'Mayo' },
+    { value: 'Junio', label: 'Junio' },
+    { value: 'Julio', label: 'Julio' },
+    { value: 'Agosto', label: 'Agosto' },
+    { value: 'Septiembre', label: 'Septiembre' },
+    { value: 'Octubre', label: 'Octubre' },
+    { value: 'Noviembre', label: 'Noviembre' },
+    { value: 'Diciembre', label: 'Diciembre' },
+  ]
 
   return (
     <>
       <div className="mb-2">
         <Button className="text-white" variant="success" onClick={handleShow}>
-          <i className="fa-solid fa-plus me-2"></i>Agregar Pago / Abono
+          <i className="fa-solid fa-plus me-2"></i>Agregar Pago de Interés
         </Button>
       </div>
       <hr className="my-1" />
-      <div className="d-flex justify-content-between mx-4 mb-1">
+      <div className="d-flex justify-content-between mx-4">
         <span className="fw-semibold"> Monto</span>
+        <span className="fw-semibold"> Mes de Pago</span>
         <span>Fecha</span>
       </div>
-      {PagoAbonos &&
-        Array.isArray(PagoAbonos) &&
-        PagoAbonos.map((pago) => (
-          <Card key={pago._id} className="mb-2">
-            <Card.Body>
-              <div className="d-flex justify-content-between">
-                <span className="fw-semibold text-success"> {ViewDollar(pago.amount)}</span>
-                <span>{pago.date_delivery}</span>
-              </div>
-            </Card.Body>
-          </Card>
-        ))}
+      <Card>
+        <Card.Body>
+          <div className="d-flex justify-content-between">
+            <span className="fw-semibold text-success"> {ViewDollar(52222)}</span>
+            <span>Agosto</span>
+              <span> {new Date().toLocaleString()}</span>
+          </div>
+        </Card.Body>
+      </Card>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Agrega nuevo Pago / Abono</Modal.Title>
+          <Modal.Title>Agregar Pago de Interés</Modal.Title>
         </Modal.Header>
         <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
           <Modal.Body>
@@ -101,6 +102,19 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
               {errors.amount && <span className="ms-2 text-danger ">{errors.amount.message}</span>}
             </div>
             <div className="mb-3">
+              <Form.Label htmlFor="mes_pago">Mes de Pago</Form.Label>
+              <Form.Select id="mes_pago">
+                <option value="" disabled>
+                  Seleccione un mes
+                </option>
+                {months.map((month) => (
+                  <option key={month.value} value={month.value}>
+                    {month.label}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+            <div className="mb-3">
               <Form.Label htmlFor="date_delivery">Fecha de Entrega</Form.Label>
               <Form.Control
                 id="date_delivery"
@@ -115,15 +129,15 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
               )}
             </div>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Cerrar
-            </Button>
-            <Button variant="success" type="submit">
-              Guardar
-            </Button>
-          </Modal.Footer>
         </form>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cerrar
+          </Button>
+          <Button variant="success" type="submit">
+            Guardar
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   )

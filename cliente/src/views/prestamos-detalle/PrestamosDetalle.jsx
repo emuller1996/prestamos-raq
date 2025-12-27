@@ -6,6 +6,7 @@ import { usePrestamos } from '../../hooks/usePrestamos'
 import { useEffect } from 'react'
 import { ViewDollar } from '../../utils'
 import PrestamosAbonosPagos from './components/PrestamosAbonosPagos'
+import PrestamosInteresesPagos from './components/PrestamosInteresesPagos'
 
 export default function PrestamoDetalle() {
   const { id } = useParams()
@@ -99,24 +100,7 @@ export default function PrestamoDetalle() {
                   </span>
                 }
               >
-                <div className="mb-3">
-                  <Button className="text-white" variant="success">
-                    <i className="fa-solid fa-plus me-2"></i>Agregar Pago Interes
-                  </Button>
-                </div>
-                <hr className='my-1'/>
-                <div className="d-flex justify-content-between mx-4">
-                  <span className="fw-semibold"> Monto</span>
-                  <span>Fecha</span>
-                </div>
-                <Card>
-                  <Card.Body>
-                    <div className="d-flex justify-content-between">
-                      <span className="fw-semibold text-success"> {ViewDollar(52222)}</span>
-                      <span> {new Date().toLocaleString()}</span>
-                    </div>
-                  </Card.Body>
-                </Card>
+                <PrestamosInteresesPagos />
               </Tab>
             </Tabs>
           </Card.Body>

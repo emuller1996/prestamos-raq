@@ -2,13 +2,20 @@
 import React, { useEffect, useState } from 'react'
 import FormComentariosCliente from './FormComentariosCliente'
 import { useClientes } from '../../../../hooks/useClientes'
-import { Alert, Badge } from 'react-bootstrap'
+import { Alert, Badge, Spinner } from 'react-bootstrap'
+import PropTypes from 'prop-types'
+
 export default function ComentariosCliente({ Cliente }) {
+  ComentariosCliente.propTypes = {
+    Cliente: PropTypes.object,
+  }
+
   console.log(Cliente)
   const { getAllComentarioByClientesPaginationPromise } = useClientes()
 
   const [Comentarios, setComentarios] = useState(null)
   const [Draw, setDraw] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     getAllComentarios(Cliente._id)
@@ -16,16 +23,26 @@ export default function ComentariosCliente({ Cliente }) {
 
   const getAllComentarios = async (id) => {
     try {
+      setLoading(true)
       const result = await getAllComentarioByClientesPaginationPromise(id)
       setComentarios(result.data)
     } catch (error) {
       console.log(error)
+    } finally{
+      setLoading(false)
     }
   }
 
   return (
     <div>
       <div className="row g-3 mb-3" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+        {loading && (
+          <div className="my-5 text-center">
+            <Spinner variant="success" animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          </div>
+        )}
         {Comentarios && Array.isArray(Comentarios) && Comentarios.length === 0 && (
           <div>
             <Alert variant="light">Este cliente no tiene comentarios</Alert>

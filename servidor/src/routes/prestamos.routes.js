@@ -51,7 +51,93 @@ PrestamosRouters.get("/:id", async (req, res) => {
   }
 });
 
+PrestamosRouters.get("/:id/pago_abono", async (req, res) => {
+  try {
+    const searchResult = await client.search({
+      index: INDEX_ES_MAIN,
+      size: 1000,
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  "type.keyword": {
+                    value: "pago_abono_prestamo",
+                  },
+                },
+              },
+              {
+                term: {
+                  "prestamo_id.keyword": {
+                    value: req.params.id,
+                  },
+                },
+              },
+            ],
+          },
+        },
+        sort: [
+          { createdTime: { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
+        ],
+      },
+    });
 
+    const dataFuncion = searchResult.body.hits.hits.map((c) => {
+      return {
+        ...c._source,
+        _id: c._id,
+      };
+    });
+    return res.status(200).json(dataFuncion);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+PrestamosRouters.get("/:id/pago_interes", async (req, res) => {
+  try {
+    const searchResult = await client.search({
+      index: INDEX_ES_MAIN,
+      size: 1000,
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  "type.keyword": {
+                    value: "pago_interes_prestamo",
+                  },
+                },
+              },
+              {
+                term: {
+                  "prestamo_id.keyword": {
+                    value: req.params.id,
+                  },
+                },
+              },
+            ],
+          },
+        },
+        sort: [
+          { createdTime: { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
+        ],
+      },
+    });
+
+    const dataFuncion = searchResult.body.hits.hits.map((c) => {
+      return {
+        ...c._source,
+        _id: c._id,
+      };
+    });
+    return res.status(200).json(dataFuncion);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
 
 PrestamosRouters.post("/", async (req, res) => {
   try {
@@ -59,6 +145,30 @@ PrestamosRouters.post("/", async (req, res) => {
     data.status = "Pendiente";
     const response = await crearElasticByType(data, "prestamo");
     crearLogsElastic(req.headers, req.body, "SE CREO UN PRESTAMO");
+    return res.status(201).json({ message: "Usuario Creado.", data, response });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+PrestamosRouters.post("/:id/pago_abono", async (req, res) => {
+  try {
+    const data = req.body;
+    data.prestamo_id = req.params.id;
+    const response = await crearElasticByType(data, "pago_abono_prestamo");
+    crearLogsElastic(req.headers, req.body, "SE CREO UN PAGO ABONO");
+    return res.status(201).json({ message: "Pago de abono creado correctamente " });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+PrestamosRouters.post("/:id/pago_interes", async (req, res) => {
+  try {
+    data.prestamo_id = req.params.id;
+    const data = req.body;
+    const response = await crearElasticByType(data, "pago_interes_prestamo");
+    crearLogsElastic(req.headers, req.body, "SE CREO UN PAGO INTERES");
     return res.status(201).json({ message: "Usuario Creado.", data, response });
   } catch (error) {
     return res.status(500).json({ message: error.message });
