@@ -5,12 +5,20 @@ export const postCreatePrestamoService = (token, data) => {
   return axios.post('/prestamos', data, { headers: { 'access-token': token } })
 }
 
+export const postCreatePagoAbonoPrestamoService = (token, data,id) => {
+  return axios.post(`/prestamos/${id}/pago_abono`, data, { headers: { 'access-token': token } })
+}
+
 export const getAllPrestamoService = (token, signal) => {
   return axios.get('/prestamos', { headers: { 'access-token': token }, signal: signal })
 }
 
 export const getPrestamoByIdService = (token, signal, id) => {
   return axios.get(`/prestamos/${id}`, { headers: { 'access-token': token }, signal: signal })
+}
+
+export const getPagosAbonoPrestamoByIdService = (token, signal, id) => {
+  return axios.get(`/prestamos/${id}/pago_abono`, { headers: { 'access-token': token }, signal: signal })
 }
 
 export const getCountPrestamoService = (token, signal) => {

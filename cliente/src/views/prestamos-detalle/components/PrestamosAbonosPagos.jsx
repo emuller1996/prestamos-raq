@@ -1,19 +1,22 @@
 /* eslint-disable prettier/prettier */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Card, Form, Modal } from 'react-bootstrap'
 import { ViewDollar } from '../../../utils'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import CurrencyInput from 'react-currency-input-field'
 import PropTypes from 'prop-types'
+import { usePrestamos } from '../../../hooks/usePrestamos'
+import toast from 'react-hot-toast'
 export default function PrestamosAbonosPagos({ idPrestamo }) {
   PrestamosAbonosPagos.propTypes = {
     idPrestamo: PropTypes.string,
   }
   const [show, setShow] = useState(false)
-
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+
+  const { CreatePagoAbonoPrestamo, getPagoAbonosPrestamoById, PagoAbonos } = usePrestamos()
 
   const {
     register,
@@ -24,8 +27,19 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
     formState: { errors },
   } = useForm()
 
+  useEffect(() => {
+    getPagoAbonosPrestamoById(idPrestamo)
+  }, [])
+
   const onSubmit = async (data) => {
-    console.log(data)
+    try {
+      const result = await CreatePagoAbonoPrestamo(data, idPrestamo)
+      toast.success(result.data.message || 'Registro creado')
+      handleClose()
+      getPagoAbonosPrestamoById(idPrestamo)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -36,18 +50,22 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
         </Button>
       </div>
       <hr className="my-1" />
-      <div className="d-flex justify-content-between mx-4">
+      <div className="d-flex justify-content-between mx-4 mb-1">
         <span className="fw-semibold"> Monto</span>
         <span>Fecha</span>
       </div>
-      <Card>
-        <Card.Body>
-          <div className="d-flex justify-content-between">
-            <span className="fw-semibold text-success"> {ViewDollar(52222)}</span>
-            <span> {new Date().toLocaleString()}</span>
-          </div>
-        </Card.Body>
-      </Card>
+      {PagoAbonos &&
+        Array.isArray(PagoAbonos) &&
+        PagoAbonos.map((pago) => (
+          <Card key={pago._id} className="mb-2">
+            <Card.Body>
+              <div className="d-flex justify-content-between">
+                <span className="fw-semibold text-success"> {ViewDollar(pago.amount)}</span>
+                <span>{pago.date_delivery}</span>
+              </div>
+            </Card.Body>
+          </Card>
+        ))}
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
@@ -97,15 +115,15 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
               )}
             </div>
           </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cerrar
+            </Button>
+            <Button variant="success" type="submit">
+              Guardar
+            </Button>
+          </Modal.Footer>
         </form>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cerrar
-          </Button>
-          <Button variant="success" type="submit">
-            Guardar
-          </Button>
-        </Modal.Footer>
       </Modal>
     </>
   )
