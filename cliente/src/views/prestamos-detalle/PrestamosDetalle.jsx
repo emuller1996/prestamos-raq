@@ -90,7 +90,7 @@ export default function PrestamoDetalle() {
                   </span>
                 }
               >
-                <PrestamosAbonosPagos idPrestamo={id} />
+                <PrestamosAbonosPagos idPrestamo={id} prestamo={dataDetalle} />
               </Tab>
               <Tab
                 eventKey="intereses"
