@@ -98,6 +98,13 @@ export default function PrestamosInteresesPagos({ idPrestamo, prestamo }) {
             sortable: true,
           },
         ]}
+        noDataComponent={
+          <>
+            <div className="alert alert-light" role="alert">
+              No hay pago de interés registrados
+            </div>
+          </>
+        }
         data={Intereses?.data}
       />
       <hr className="my-1" />

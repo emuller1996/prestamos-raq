@@ -111,6 +111,13 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
         ]}
         progressPending={loading}
         data={PagoAbonos?.data}
+        noDataComponent={
+          <>
+            <div className="alert alert-light" role="alert">
+              No hay pagos de abonos registrados
+            </div>
+          </>
+        }
       />
       <hr className="my-1" />
       <div className="row justify-content-center">
