@@ -31,9 +31,9 @@ export default function PrestamoDetalle() {
               Detalle del Prestamo <Badge bg="secondary">{dataDetalle?.code}</Badge>
             </h5>
             <hr />
-            <div className="row g-3">
+            <div className="row g-md-3">
               <div className="col-md-3">
-                <p>Datos Cliente</p>
+                <p className="fw-semibold">Datos Cliente</p>
                 <div className="d-flex justify-content-between">
                   <span>Nombre</span>
                   <span>{dataDetalle?.clientData.name}</span>
@@ -48,7 +48,7 @@ export default function PrestamoDetalle() {
                 </div>
               </div>
               <div className="col-md-4">
-                <p>Datos Préstamo</p>
+                <p className="fw-semibold">Datos Préstamo</p>
                 <div className="d-flex justify-content-between">
                   <span>Monto Préstamo</span>
                   <span>{ViewDollar(dataDetalle?.amount)}</span>
@@ -90,7 +90,7 @@ export default function PrestamoDetalle() {
                   </span>
                 }
               >
-                <PrestamosAbonosPagos idPrestamo={id} />
+                <PrestamosAbonosPagos idPrestamo={id} prestamo={dataDetalle} />
               </Tab>
               <Tab
                 eventKey="intereses"
@@ -100,7 +100,7 @@ export default function PrestamoDetalle() {
                   </span>
                 }
               >
-                <PrestamosInteresesPagos />
+                <PrestamosInteresesPagos idPrestamo={id} prestamo={dataDetalle} />
               </Tab>
             </Tabs>
           </Card.Body>

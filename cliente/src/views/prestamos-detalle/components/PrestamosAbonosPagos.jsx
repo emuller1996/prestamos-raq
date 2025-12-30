@@ -8,21 +8,25 @@ import CurrencyInput from 'react-currency-input-field'
 import PropTypes from 'prop-types'
 import { usePrestamos } from '../../../hooks/usePrestamos'
 import toast from 'react-hot-toast'
-export default function PrestamosAbonosPagos({ idPrestamo }) {
+import DataTable from 'react-data-table-component'
+export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
   PrestamosAbonosPagos.propTypes = {
     idPrestamo: PropTypes.string,
+    prestamo: PropTypes.object,
   }
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+  const [PagoAbonoSelecionado, setPagoAbonoSelecionado] = useState(null)
 
-  const { CreatePagoAbonoPrestamo, getPagoAbonosPrestamoById, PagoAbonos } = usePrestamos()
+  const { CreatePagoAbonoPrestamo, getPagoAbonosPrestamoById, PagoAbonos, loading } = usePrestamos()
 
   const {
     register,
     handleSubmit,
     control,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm()
@@ -32,44 +36,116 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
   }, [])
 
   const onSubmit = async (data) => {
-    try {
-      const result = await CreatePagoAbonoPrestamo(data, idPrestamo)
-      toast.success(result.data.message || 'Registro creado')
-      handleClose()
-      getPagoAbonosPrestamoById(idPrestamo)
-    } catch (error) {
-      console.log(error)
+    if (PagoAbonoSelecionado) {
+      console.log(data)
+      console.log('editar')
+      console.log(PagoAbonoSelecionado)
+    } else {
+      try {
+        const result = await CreatePagoAbonoPrestamo(data, idPrestamo)
+        toast.success(result.data.message || 'Registro creado')
+        handleClose()
+        reset()
+        getPagoAbonosPrestamoById(idPrestamo)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
   return (
     <>
       <div className="mb-2">
-        <Button className="text-white" variant="success" onClick={handleShow}>
+        <Button
+          className="text-white"
+          variant="success"
+          onClick={() => {
+            handleShow()
+            reset()
+            setPagoAbonoSelecionado(null)
+          }}
+        >
           <i className="fa-solid fa-plus me-2"></i>Agregar Pago / Abono
         </Button>
       </div>
       <hr className="my-1" />
-      <div className="d-flex justify-content-between mx-4 mb-1">
-        <span className="fw-semibold"> Monto</span>
-        <span>Fecha</span>
+      <DataTable
+        columns={[
+          {
+            name: 'Monto Abono',
+            selector: (row) => row.amount,
+            cell: (row) => ViewDollar(row.amount),
+            sortable: true,
+          },
+          {
+            name: 'Fecha Pago',
+            selector: (row) => row.date_delivery,
+            cell: (row) => row.date_delivery,
+            sortable: true,
+          },
+          {
+            name: 'Acciones',
+            cell: (row) => (
+              <>
+                <div className="btn-group" role="group" aria-label="Basic example">
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() => {
+                      handleShow()
+                      setPagoAbonoSelecionado(row)
+                      console.log(row)
+                      setValue('date_delivery', row.date_delivery)
+                      setValue('amount', row.amount)
+                    }}
+                  >
+                    <i className="fa-regular fa-pen-to-square"></i>
+                  </button>
+                  <button type="button" className="btn btn-danger text-white btn-sm">
+                    <i className="fa-regular fa-trash-can"></i>
+                  </button>
+                </div>
+              </>
+            ),
+          },
+        ]}
+        progressPending={loading}
+        data={PagoAbonos?.data}
+      />
+      <hr className="my-1" />
+      <div className="row justify-content-center">
+        <div className="col-md-7">
+          <div className="table-responsive">
+            <table className="table text-start">
+              <thead>
+                <tr>
+                  <th scope="col">Prestamo</th>
+                  <th scope="col">{prestamo && ViewDollar(prestamo.amount)}</th>
+                </tr>
+                <tr>
+                  <th scope="col">Total Abono</th>
+                  <th scope="col" className="text-success">
+                    {PagoAbonos && ViewDollar(PagoAbonos?.suma_pagos?.value)}
+                  </th>
+                </tr>
+                <tr>
+                  <th scope="col">Saldo Total</th>
+                  <th scope="col" className="text-warning">
+                    {PagoAbonos &&
+                      prestamo &&
+                      ViewDollar(prestamo.amount - PagoAbonos?.suma_pagos?.value)}
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
       </div>
-      {PagoAbonos &&
-        Array.isArray(PagoAbonos) &&
-        PagoAbonos.map((pago) => (
-          <Card key={pago._id} className="mb-2">
-            <Card.Body>
-              <div className="d-flex justify-content-between">
-                <span className="fw-semibold text-success"> {ViewDollar(pago.amount)}</span>
-                <span>{pago.date_delivery}</span>
-              </div>
-            </Card.Body>
-          </Card>
-        ))}
-
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Agrega nuevo Pago / Abono</Modal.Title>
+          <Modal.Title>
+            {PagoAbonoSelecionado ? ' Editar Pago / Abono' : ' Agrega nuevo Pago / Abono'}{' '}
+          </Modal.Title>
         </Modal.Header>
         <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
           <Modal.Body>
@@ -101,7 +177,7 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
               {errors.amount && <span className="ms-2 text-danger ">{errors.amount.message}</span>}
             </div>
             <div className="mb-3">
-              <Form.Label htmlFor="date_delivery">Fecha de Entrega</Form.Label>
+              <Form.Label htmlFor="date_delivery">Fecha de Pago</Form.Label>
               <Form.Control
                 id="date_delivery"
                 type="date"
@@ -119,7 +195,7 @@ export default function PrestamosAbonosPagos({ idPrestamo }) {
             <Button variant="secondary" onClick={handleClose}>
               Cerrar
             </Button>
-            <Button variant="success" type="submit">
+            <Button variant="success" className="text-white" type="submit">
               Guardar
             </Button>
           </Modal.Footer>
