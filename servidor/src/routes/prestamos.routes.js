@@ -133,6 +133,13 @@ PrestamosRouters.get("/:id/pago_interes", async (req, res) => {
             ],
           },
         },
+        aggs: {
+          suma_pagos: {
+            sum: {
+              field: "amount",
+            },
+          },
+        },
         sort: [
           { createdTime: { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
         ],
@@ -145,7 +152,12 @@ PrestamosRouters.get("/:id/pago_interes", async (req, res) => {
         _id: c._id,
       };
     });
-    return res.status(200).json(dataFuncion);
+    return res
+      .status(200)
+      .json({
+        data: dataFuncion,
+        suma_pagos: searchResult.body.aggregations.suma_pagos,
+      });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -179,11 +191,55 @@ PrestamosRouters.post("/:id/pago_abono", async (req, res) => {
 
 PrestamosRouters.post("/:id/pago_interes", async (req, res) => {
   try {
-    data.prestamo_id = req.params.id;
+
+    const dataLog = {};
     const data = req.body;
+    data.prestamo_id = req.params.id;
+    
+    dataLog.data = data
+    //validar pago de interes
+
+    const searchResult = await client.search({
+      index: INDEX_ES_MAIN,
+      size: 1000,
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  "type.keyword": {
+                    value: "pago_interes_prestamo",
+                  },
+                },
+              },
+              {
+                term: {
+                  "prestamo_id.keyword": {
+                    value: req.params.id,
+                  },
+                },
+              },
+            ],
+          },
+        },
+        sort: [
+          { createdTime: { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
+        ],
+      },
+    });
+    
+    const dataFuncion = searchResult.body.hits.hits.map((c) => {
+      return {
+        ...c._source,
+        _id: c._id,
+      };
+    });
+
     const response = await crearElasticByType(data, "pago_interes_prestamo");
-    crearLogsElastic(req.headers, req.body, "SE CREO UN PAGO INTERES");
-    return res.status(201).json({ message: "Usuario Creado.", data, response });
+    dataLog.response_es = response
+    crearLogsElastic(req.headers, dataLog, "SE CREO UN PAGO INTERES");
+    return res.status(201).json({ message: "Pago de Interes Creado." });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
