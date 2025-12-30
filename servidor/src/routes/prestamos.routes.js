@@ -77,6 +77,13 @@ PrestamosRouters.get("/:id/pago_abono", async (req, res) => {
             ],
           },
         },
+        aggs: {
+          suma_pagos: {
+            sum: {
+              field: "amount",
+            },
+          },
+        },
         sort: [
           { createdTime: { order: "desc" } }, // Reemplaza con el campo por el que quieres ordenar
         ],
@@ -89,7 +96,12 @@ PrestamosRouters.get("/:id/pago_abono", async (req, res) => {
         _id: c._id,
       };
     });
-    return res.status(200).json(dataFuncion);
+    return res
+      .status(200)
+      .json({
+        data: dataFuncion,
+        suma_pagos: searchResult.body.aggregations.suma_pagos,
+      });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -157,7 +169,9 @@ PrestamosRouters.post("/:id/pago_abono", async (req, res) => {
     data.prestamo_id = req.params.id;
     const response = await crearElasticByType(data, "pago_abono_prestamo");
     crearLogsElastic(req.headers, req.body, "SE CREO UN PAGO ABONO");
-    return res.status(201).json({ message: "Pago de abono creado correctamente " });
+    return res
+      .status(201)
+      .json({ message: "Pago de abono creado correctamente " });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
