@@ -6,8 +6,10 @@ import {
   getAllPrestamoService,
   getCountPrestamoService,
   getPagosAbonoPrestamoByIdService,
+  getPagosInteresPrestamoByIdService,
   getPrestamoByIdService,
   postCreatePagoAbonoPrestamoService,
+  postCreatePagoInteresPrestamoService,
   postCreatePrestamoService,
 } from '../services/prestamos.services'
 
@@ -15,6 +17,8 @@ export const usePrestamos = () => {
   const [data, setData] = useState(null)
   const [dataDetalle, setDataDetalle] = useState(null)
   const [PagoAbonos, setPagoAbonos] = useState(null)
+  const [Intereses, setIntereses] = useState(null)
+
 
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -29,6 +33,22 @@ export const usePrestamos = () => {
 
   const CreatePagoAbonoPrestamo = async (data,prestamo_id) => {
     return postCreatePagoAbonoPrestamoService(Token, data,prestamo_id)
+  }
+
+  const CreatePagoInteresPrestamo = async (data,prestamo_id) => {
+    return postCreatePagoInteresPrestamoService(Token, data,prestamo_id)
+  }
+
+  const getPagoInteresPrestamoById = async (id) => {
+    try {
+      setLoading(true)
+      const result = await getPagosInteresPrestamoByIdService(Token, signal, id)
+      setIntereses(result.data)
+    } catch (error) {
+      console.log(error)
+    }finally{
+      setLoading(false)
+    }
   }
 
   const getPagoAbonosPrestamoById = async (id) => {
@@ -99,7 +119,10 @@ export const usePrestamos = () => {
     getPrestamoById,
     getCountPrestamos,
     CreatePagoAbonoPrestamo,
+    CreatePagoInteresPrestamo,
     getPagoAbonosPrestamoById,
+    getPagoInteresPrestamoById,
+    Intereses,
     PagoAbonos,
     Count,
     dataDetalle,

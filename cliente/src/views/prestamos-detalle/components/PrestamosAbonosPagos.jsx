@@ -17,6 +17,7 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
   const [show, setShow] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
+  const [PagoAbonoSelecionado, setPagoAbonoSelecionado] = useState(null)
 
   const { CreatePagoAbonoPrestamo, getPagoAbonosPrestamoById, PagoAbonos, loading } = usePrestamos()
 
@@ -25,6 +26,7 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
     handleSubmit,
     control,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm()
@@ -34,20 +36,34 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
   }, [])
 
   const onSubmit = async (data) => {
-    try {
-      const result = await CreatePagoAbonoPrestamo(data, idPrestamo)
-      toast.success(result.data.message || 'Registro creado')
-      handleClose()
-      getPagoAbonosPrestamoById(idPrestamo)
-    } catch (error) {
-      console.log(error)
+    if (PagoAbonoSelecionado) {
+      console.log(data)
+      console.log('editar')
+      console.log(PagoAbonoSelecionado)
+    } else {
+      try {
+        const result = await CreatePagoAbonoPrestamo(data, idPrestamo)
+        toast.success(result.data.message || 'Registro creado')
+        handleClose()
+        getPagoAbonosPrestamoById(idPrestamo)
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
   return (
     <>
       <div className="mb-2">
-        <Button className="text-white" variant="success" onClick={handleShow}>
+        <Button
+          className="text-white"
+          variant="success"
+          onClick={() => {
+            handleShow()
+            reset()
+            setPagoAbonoSelecionado(null)
+          }}
+        >
           <i className="fa-solid fa-plus me-2"></i>Agregar Pago / Abono
         </Button>
       </div>
@@ -71,7 +87,17 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
             cell: (row) => (
               <>
                 <div className="btn-group" role="group" aria-label="Basic example">
-                  <button type="button" className="btn btn-primary btn-sm">
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() => {
+                      handleShow()
+                      setPagoAbonoSelecionado(row)
+                      console.log(row)
+                      setValue('date_delivery', row.date_delivery)
+                      setValue('amount', row.amount)
+                    }}
+                  >
                     <i className="fa-regular fa-pen-to-square"></i>
                   </button>
                   <button type="button" className="btn btn-danger text-white btn-sm">
@@ -116,7 +142,9 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
       </div>
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Agrega nuevo Pago / Abono</Modal.Title>
+          <Modal.Title>
+            {PagoAbonoSelecionado ? ' Editar Pago / Abono' : ' Agrega nuevo Pago / Abono'}{' '}
+          </Modal.Title>
         </Modal.Header>
         <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}>
           <Modal.Body>
@@ -148,7 +176,7 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
               {errors.amount && <span className="ms-2 text-danger ">{errors.amount.message}</span>}
             </div>
             <div className="mb-3">
-              <Form.Label htmlFor="date_delivery">Fecha de Entrega</Form.Label>
+              <Form.Label htmlFor="date_delivery">Fecha de Pago</Form.Label>
               <Form.Control
                 id="date_delivery"
                 type="date"
@@ -166,7 +194,7 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
             <Button variant="secondary" onClick={handleClose}>
               Cerrar
             </Button>
-            <Button variant="success" type="submit">
+            <Button variant="success" className="text-white" type="submit">
               Guardar
             </Button>
           </Modal.Footer>
