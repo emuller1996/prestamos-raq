@@ -220,6 +220,20 @@ PrestamosRouters.post("/:id/pago_interes", async (req, res) => {
                   },
                 },
               },
+              {
+                term: {
+                  "mes_pago.keyword": {
+                    value: data.mes_pago,
+                  },
+                },
+              },
+              {
+                term: {
+                  "year_pago": {
+                    value: data.year_pago,
+                  },
+                },
+              },
             ],
           },
         },
@@ -235,6 +249,11 @@ PrestamosRouters.post("/:id/pago_interes", async (req, res) => {
         _id: c._id,
       };
     });
+
+    if(dataFuncion.length > 0){
+      return res.status(400).json({ message: `El pago de interes en el mes de ${data.mes_pago} ya ha sido registrado.`, dataFuncion });
+    }
+
 
     const response = await crearElasticByType(data, "pago_interes_prestamo");
     dataLog.response_es = response
