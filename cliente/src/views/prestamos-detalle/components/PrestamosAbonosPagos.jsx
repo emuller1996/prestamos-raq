@@ -45,6 +45,7 @@ export default function PrestamosAbonosPagos({ idPrestamo, prestamo }) {
         const result = await CreatePagoAbonoPrestamo(data, idPrestamo)
         toast.success(result.data.message || 'Registro creado')
         handleClose()
+        reset()
         getPagoAbonosPrestamoById(idPrestamo)
       } catch (error) {
         console.log(error)

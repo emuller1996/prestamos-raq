@@ -43,9 +43,14 @@ export default function PrestamosInteresesPagos({ idPrestamo, prestamo }) {
     try {
       const result = await CreatePagoInteresPrestamo(data, idPrestamo)
       toast.success(result.data.message, { duration: 1500 })
+      getPagoInteresPrestamoById(idPrestamo)
       handleClose()
+      reset()
     } catch (error) {
-      console.log(error)
+      console.error(error)
+      if (error.response) {
+        toast.error(error.response.data.message)
+      }
     }
   }
 
@@ -84,7 +89,7 @@ export default function PrestamosInteresesPagos({ idPrestamo, prestamo }) {
             name: 'Mes de Interés',
             selector: (row) => row.mes_pago,
             cell: (row) => row.mes_pago,
-            sortable: true,
+            sortable: false,
           },
           {
             name: 'Fecha Pago de Interés',
@@ -92,10 +97,26 @@ export default function PrestamosInteresesPagos({ idPrestamo, prestamo }) {
             cell: (row) => row.date_delivery,
             sortable: true,
           },
-          
         ]}
         data={Intereses?.data}
       />
+      <hr className="my-1" />
+      <div className="row justify-content-center">
+        <div className="col-md-7">
+          <div className="table-responsive">
+            <table className="table text-start">
+              <thead>
+                <tr>
+                  <th scope="col">Total Intereses</th>
+                  <th scope="col" className="text-success">
+                    {Intereses && ViewDollar(Intereses?.suma_pagos?.value)}
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
 
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
@@ -171,7 +192,7 @@ export default function PrestamosInteresesPagos({ idPrestamo, prestamo }) {
             <Button variant="secondary" onClick={handleClose}>
               Cerrar
             </Button>
-            <Button variant="success" type="submit">
+            <Button variant="success" className="text-white" type="submit">
               Guardar
             </Button>
           </Modal.Footer>
