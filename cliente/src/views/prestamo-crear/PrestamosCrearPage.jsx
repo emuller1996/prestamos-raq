@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect } from 'react'
-import { Button, Card, Form, InputGroup } from 'react-bootstrap'
+import { Button, Card, Form, InputGroup, Spinner } from 'react-bootstrap'
 import AsyncSelect from 'react-select/async'
 import { useClientes } from '../../hooks/useClientes'
 import { stylesSelect, themeSelect } from '../../utils/optionsConfig'
@@ -21,7 +21,7 @@ export default function PrestamosCrearPage() {
     control,
     reset,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm()
 
   useEffect(() => {
@@ -38,6 +38,7 @@ export default function PrestamosCrearPage() {
       const result = await CreatePrestamo(data)
       reset()
       toast.success(result.data.message)
+      await getCountPrestamos()
     } catch (error) {
       console.log(error)
     }
@@ -193,8 +194,8 @@ export default function PrestamosCrearPage() {
               </div>
             </div>
             <div className="mt-5 d-flex gap-4 justify-content-center">
-              <Button type="submit" className="text-white" variant="success">
-                Guardar Producto
+              <Button  disabled={isSubmitting} type="submit" className="text-white" variant="success">
+                {isSubmitting && (<Spinner animation="border" size="sm" />)}  Guardar Producto
               </Button>
             </div>
           </form>
