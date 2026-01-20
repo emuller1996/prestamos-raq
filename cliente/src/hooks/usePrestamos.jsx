@@ -8,6 +8,7 @@ import {
   getPagosAbonoPrestamoByIdService,
   getPagosInteresPrestamoByIdService,
   getPrestamoByIdService,
+  getPrestamoSearchPaginationServices,
   postCreatePagoAbonoPrestamoService,
   postCreatePagoInteresPrestamoService,
   postCreatePrestamoService,
@@ -18,6 +19,8 @@ export const usePrestamos = () => {
   const [dataDetalle, setDataDetalle] = useState(null)
   const [PagoAbonos, setPagoAbonos] = useState(null)
   const [Intereses, setIntereses] = useState(null)
+  const [dataP, setDataP] = useState(undefined)
+
 
 
   const [error, setError] = useState(null)
@@ -111,6 +114,39 @@ export const usePrestamos = () => {
     }
   }
 
+  const getAllPrestamosPagination = async (data) => {
+    setLoading(true)
+    setDataP(undefined)
+    try {
+      
+      const res = await getPrestamoSearchPaginationServices(Token, data)
+      if (res.status !== 200) {
+        let err = new Error('Error en la petición Fetch')
+        err.status = res.status || '00'
+        err.statusText = res.statusText || 'Ocurrió un error'
+        throw err
+      }
+      console.log(res)
+      if (!signal.aborted) {
+        setDataP(res.data)
+        setError(null)
+      }
+    } catch (error) {
+      if (!signal.aborted) {
+        setData(null)
+        setError(error)
+      }
+    } finally {
+      if (!signal.aborted) {
+        setLoading(false)
+      }
+    }
+  }
+
+  const getPrestamosPagination = async () =>{
+    return getPrestamoSearchPaginationServices(Token,{})
+  }
+
   return {
     loading,
     error,
@@ -122,6 +158,9 @@ export const usePrestamos = () => {
     CreatePagoInteresPrestamo,
     getPagoAbonosPrestamoById,
     getPagoInteresPrestamoById,
+    getAllPrestamosPagination,
+    getPrestamosPagination,
+    dataP,
     Intereses,
     PagoAbonos,
     Count,
