@@ -6,6 +6,19 @@
   font-family: 'Rubik', sans-serif;
 }
 
+.accordion .accordion-button.collapsed{
+  background-color: #1b9e3e93;
+  color: white;
+  box-shadow: none !important;
+}
+
+.accordion .accordion-button {
+  background-color: #1b9e3e;
+  color: white;
+  box-shadow: none !important;
+}
+
+
 .rdt_TableHeadRow {
   font-size: 1.3em !important;
   font-weight: 600 !important;
