@@ -35,7 +35,6 @@ export default function PrestamosPage() {
       return { ...status, ...data }
     })
   }
-
   return (
     <div>
       <CContainer fluid>
