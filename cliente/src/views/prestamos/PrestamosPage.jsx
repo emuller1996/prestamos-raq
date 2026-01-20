@@ -160,7 +160,7 @@ export default function PrestamosPage() {
             paginationTotalRows={dataP?.total}
             paginationComponentOptions={paginationComponentOptions}
             noDataComponent={
-              <div className="d-flex justify-content-center my-5">No hay productos.</div>
+              <div className="d-flex justify-content-center my-5">No hay Prestamos.</div>
             }
             onChangeRowsPerPage={(perPage, page) => {
               console.log(perPage, page)
