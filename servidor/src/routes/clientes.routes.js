@@ -1,5 +1,4 @@
 import { Router } from "express";
-import xlsx from "xlsx";
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
 import pkg from "express-fileupload";
