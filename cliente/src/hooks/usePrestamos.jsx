@@ -12,6 +12,7 @@ import {
   postCreatePagoAbonoPrestamoService,
   postCreatePagoInteresPrestamoService,
   postCreatePrestamoService,
+  putUpdatePrestamoService,
 } from '../services/prestamos.services'
 
 export const usePrestamos = () => {
@@ -32,6 +33,10 @@ export const usePrestamos = () => {
 
   const CreatePrestamo = async (data) => {
     return postCreatePrestamoService(Token, data)
+  }
+
+  const UpdatePrestamo = async (data, id) => {
+    return putUpdatePrestamoService(Token, id, data)
   }
 
   const CreatePagoAbonoPrestamo = async (data,prestamo_id) => {
@@ -151,6 +156,7 @@ export const usePrestamos = () => {
     loading,
     error,
     CreatePrestamo,
+    UpdatePrestamo,
     getAlPrestamo,
     getPrestamoById,
     getCountPrestamos,

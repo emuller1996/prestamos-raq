@@ -13,6 +13,10 @@ export const postCreatePagoInteresPrestamoService = (token, data, id) => {
   return axios.post(`/prestamos/${id}/pago_interes`, data, { headers: { 'access-token': token } })
 }
 
+export const putUpdatePrestamoService = (token, id, data) => {
+  return axios.put(`/prestamos/${id}`, data, { headers: { 'access-token': token } })
+}
+
 export const getAllPrestamoService = (token, signal) => {
   return axios.get('/prestamos', { headers: { 'access-token': token }, signal: signal })
 }

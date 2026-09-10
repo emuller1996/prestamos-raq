@@ -4,6 +4,7 @@ import {
   crearElasticByType,
   crearLogsElastic,
   getDocumentById,
+  updateElasticByType,
 } from "../utils/index.js";
 import { client } from "../db.js";
 import { INDEX_ES_MAIN } from "../config.js";
@@ -263,6 +264,20 @@ PrestamosRouters.post("/", async (req, res) => {
     const response = await crearElasticByType(data, "prestamo");
     crearLogsElastic(req.headers, req.body, "SE CREO UN PRESTAMO");
     return res.status(201).json({ message: "Usuario Creado.", data, response });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+PrestamosRouters.put("/:id", async (req, res) => {
+  try {
+    const data = req.body;
+    const r = await updateElasticByType(req.params.id, data);
+    if (r.body.result === "updated") {
+      crearLogsElastic(req.headers, data, "SE MODIFICO UN PRESTAMO");
+      return res.status(200).json({ message: "Prestamo Actualizado." });
+    }
+    return res.status(500).json({ message: "No se pudo actualizar el préstamo." });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

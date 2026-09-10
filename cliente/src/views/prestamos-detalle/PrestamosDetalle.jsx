@@ -1,15 +1,17 @@
 /* eslint-disable prettier/prettier */
-import React from 'react'
-import { Badge, Button, Card, Spinner, Tab, Tabs } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Badge, Button, Card, Dropdown, Modal, Spinner, Tab, Tabs } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import { usePrestamos } from '../../hooks/usePrestamos'
 import { useEffect } from 'react'
 import { ViewDollar } from '../../utils'
 import PrestamosAbonosPagos from './components/PrestamosAbonosPagos'
 import PrestamosInteresesPagos from './components/PrestamosInteresesPagos'
+import PrestamosCrearPage from '../prestamo-crear/PrestamosCrearPage'
 
 export default function PrestamoDetalle() {
   const { id } = useParams()
+  const [showEdit, setShowEdit] = useState(false)
 
   const { getPrestamoById, dataDetalle, loading } = usePrestamos()
 
@@ -27,9 +29,22 @@ export default function PrestamoDetalle() {
       {dataDetalle && (
         <Card>
           <Card.Body>
-            <h5>
-              Detalle del Prestamo <Badge bg="secondary">{dataDetalle?.code}</Badge>
-            </h5>
+            <div className='d-flex justify-content-between align-items-center'>
+              <h5>
+                Detalle del Prestamo <Badge bg="secondary">{dataDetalle?.code}</Badge>
+              </h5>
+
+              <Dropdown  variant="secondary">
+                <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                  <i className="fa-solid fa-ellipsis-vertical"></i>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => setShowEdit(true)}>
+                    <i className="fa-solid fa-pen-to-square me-2"></i>Modificar Prestamo
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
             <hr />
             <div className="row g-md-3">
               <div className="col-md-3">
@@ -104,6 +119,15 @@ export default function PrestamoDetalle() {
               </Tab>
             </Tabs>
           </Card.Body>
+          <Modal backdrop="static" size="lg" centered show={showEdit} onHide={() => setShowEdit(false)}>
+            <Modal.Body>
+              <PrestamosCrearPage
+                prestamo={dataDetalle}
+                onHide={() => setShowEdit(false)}
+                onUpdated={() => getPrestamoById(id)}
+              />
+            </Modal.Body>
+          </Modal>
         </Card>
       )}
     </div>
