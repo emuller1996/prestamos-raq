@@ -19,6 +19,9 @@
 }
 
 
+.dropdown-toggle::after{
+  content: none !important;
+}
 .rdt_TableHeadRow {
   font-size: 1.3em !important;
   font-weight: 600 !important;
