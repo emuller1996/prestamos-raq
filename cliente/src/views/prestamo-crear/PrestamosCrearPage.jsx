@@ -2,8 +2,9 @@
 import React, { useEffect } from 'react'
 import { Button, Card, Form, InputGroup, Spinner } from 'react-bootstrap'
 import AsyncSelect from 'react-select/async'
+import Select from 'react-select'
 import { useClientes } from '../../hooks/useClientes'
-import { stylesSelect, themeSelect } from '../../utils/optionsConfig'
+import { diasPagoOptions, stylesSelect, themeSelect } from '../../utils/optionsConfig'
 import CurrencyInput from 'react-currency-input-field'
 import { Controller, useForm } from 'react-hook-form'
 import { ViewDollar } from '../../utils'
@@ -183,16 +184,29 @@ export default function PrestamosCrearPage({ prestamo, onHide, onUpdated }) {
               </div>
               <div className="col-md-4">
                 <Form.Label htmlFor="num_day_payment">Numero del Dia de Pago</Form.Label>
-                <Form.Control
-                  id="num_day_payment"
-                  {...register('num_day_payment', {
-                    required: { value: true, message: 'El dia de pago es requeridad' },
-                  })}
-                  type="number"
-                  placeholder=""
-                  max={31}
-                  min={1}
-                  defaultValue={prestamo?.num_day_payment}
+                <Controller
+                  name="num_day_payment"
+                  rules={{ required: { value: true, message: 'El dia de pago es requeridad' } }}
+                  control={control}
+                  defaultValue={
+                    diasPagoOptions.find((d) => d.value === `${prestamo?.num_day_payment}`)?.value
+                  }
+                  render={({ field: { name, onChange, value, ref } }) => {
+                    return (
+                      <Select
+                        inputId="num_day_payment"
+                        name={name}
+                        ref={ref}
+                        placeholder="Seleccionar día"
+                        isClearable
+                        options={diasPagoOptions}
+                        value={diasPagoOptions.find((d) => d.value === value) ?? null}
+                        onChange={(e) => onChange(e?.value)}
+                        styles={stylesSelect}
+                        theme={themeSelect}
+                      />
+                    )
+                  }}
                 />
                 {errors.num_day_payment && (
                   <span className="ms-2 text-danger ">{errors.num_day_payment.message}</span>

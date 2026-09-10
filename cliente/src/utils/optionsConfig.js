@@ -12,6 +12,11 @@ export const genderOptions = [
   { label: 'Ninos', value: 'kid' },
 ]
 
+export const diasPagoOptions = Array.from({ length: 31 }, (_, i) => {
+  const dia = `${i + 1}`
+  return { label: dia, value: dia }
+})
+
 export const StatusOrderOptions = [
   { label: 'Pendiente', value: 'Pendiente' },
   { label: 'En Proceso', value: 'En Proceso' },
